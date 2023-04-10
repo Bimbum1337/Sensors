@@ -52,9 +52,11 @@ class _HomeViewState extends State<HomeView> {
         .toList();
 
     return Scaffold(
+      backgroundColor: ColorsManager.primaryBackground,
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(vertical: 5),
           children: [
             _createProfileData(context),
             const SizedBox(height: 35),
@@ -98,13 +100,6 @@ class _HomeViewState extends State<HomeView> {
                 text: _trainingRecommendation(),
               ),
             ),
-            const SizedBox(height: 30),
-            Text('Accelerometer: $accelerometer'),
-            Text('Gyroscope: $gyroscope'),
-            Text('Distance: $_distanceTraveled'),
-            if (_currentPosition != null)
-              Text(
-                  'Location: ${_currentPosition!.latitude}, ${_currentPosition!.longitude}'),
           ],
         ),
       ),

@@ -83,8 +83,6 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void _onFinishLoading() async {
-    // navigate to onBoarding screen bc it means its the first time he open the app
-    // Navigator.pushReplacementNamed(
-    //     context, Routes.mainRoute);
+    Navigator.pushReplacementNamed(context, Routes.mainRoute);
   }
 }
