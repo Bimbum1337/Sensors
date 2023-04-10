@@ -31,4 +31,6 @@ class ColorsManager {
   static Color error = const Color(0xffe61f34);
 
   static Color lineColor = const Color(0xFF9E9E9E);
+  static const cardioColor = Color(0xFFFCB74F);
+  static const armsColor = Color(0xFF5C9BA4);
 }

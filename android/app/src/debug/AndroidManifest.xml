@@ -5,4 +5,9 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.hardware.sensor.proximity"/>
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
 </manifest>
