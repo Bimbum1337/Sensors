@@ -194,12 +194,22 @@ class _HomeViewState extends State<HomeView> {
     );
 
     FlutterBarometer.currentPressureEvent.listen((event) {
-      setState(() {
-        _currentPressure = event;
-      });
+      _currentPressure = event;
     });
   }
+  @override
+  void dispose() {
+    _streamSubscriptions.forEach((element) {
+      element.cancel();
+    });
 
+    if(locationSubscription != null) {
+      locationSubscription!.cancel();
+    }
+
+    FlutterBarometer.currentPressureEvent.drain();
+    super.dispose();
+  }
   Future<void> _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
