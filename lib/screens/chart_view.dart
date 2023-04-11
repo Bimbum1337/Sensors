@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_charts/flutter_charts.dart';
-import 'package:untitled5/screens/heart_view.dart';
-
 import '../utils/colors_manager.dart';
+import '../utils/models.dart';
 
 class Chart extends StatelessWidget {
   final List<SensorValue> _data;

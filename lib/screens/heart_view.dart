@@ -4,6 +4,7 @@ import 'package:untitled5/utils/colors_manager.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '../utils/constants_manager.dart';
+import '../utils/models.dart';
 import 'chart_view.dart';
 
 class HeartView extends StatefulWidget {
@@ -204,11 +205,4 @@ class HeartViewView extends State<HeartView> {
       ),
     );
   }
-}
-
-class SensorValue {
-  final DateTime time;
-  final double value;
-
-  SensorValue(this.time, this.value);
 }

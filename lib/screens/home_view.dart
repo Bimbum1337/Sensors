@@ -4,6 +4,7 @@ import 'package:flutter_barometer_plugin/flutter_barometer.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:untitled5/screens/app_pref.dart';
+import 'package:untitled5/screens/data_view.dart';
 import 'package:untitled5/utils/colors_manager.dart';
 import 'dart:math'; // Import the math library
 import '../Utils/routes_manager.dart';
@@ -21,7 +22,6 @@ class _HomeViewState extends State<HomeView> {
   List<double>? _accelerometerValues;
   List<double>? _gyroscopeValues;
   List<double>? _previousAccelerometerValues;
-  List<double>? _userAccelerometerValues;
   int _stepCount = 0;
   Position? _currentPosition;
   double _distanceTraveled = 0;
@@ -40,6 +40,68 @@ class _HomeViewState extends State<HomeView> {
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   double altitude = 0.0;
   BarometerValue _currentPressure = const BarometerValue(0.0);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initTimers();
+
+    _streamSubscriptions.add(
+      accelerometerEvents.listen(
+            (AccelerometerEvent event) {
+          setState(() {
+            _accelerometerValues = <double>[event.x, event.y, event.z];
+            _calculateSteps();
+            _calculateCaloriesBurned();
+
+            double magnitude =
+            sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
+            if (magnitude > 30 && !_isStanding) {
+
+              setState(() {
+                _isStanding = true;
+                if(isRunning) {
+                  standUp += 1;
+                }
+              });
+            } else if (magnitude < 10 && _isStanding) {
+              setState(() {
+                _isStanding = false;
+              });
+
+
+            }
+          });
+        },
+      ),
+    );
+
+    _streamSubscriptions.add(
+      gyroscopeEvents.listen(
+            (GyroscopeEvent event) {
+          setState(() {
+            _gyroscopeValues = <double>[event.x, event.y, event.z];
+
+            double acceleration =
+            sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
+
+            if (acceleration > 9.8 && acceleration < 12) {
+              activity = "Walking";
+            } else if (acceleration >= 12 && acceleration < 20) {
+              activity = "Running";
+            } else {
+              activity = "Idle";
+            }
+          });
+        },
+      ),
+    );
+
+    FlutterBarometer.currentPressureEvent.listen((event) {
+      _currentPressure = event;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,68 +175,6 @@ class _HomeViewState extends State<HomeView> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    _initTimers();
-
-    _streamSubscriptions.add(
-      accelerometerEvents.listen(
-        (AccelerometerEvent event) {
-          setState(() {
-            _accelerometerValues = <double>[event.x, event.y, event.z];
-            _calculateSteps();
-            _calculateCaloriesBurned();
-
-            double magnitude =
-                sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
-            if (magnitude > 30 && !_isStanding) {
-
-              setState(() {
-                _isStanding = true;
-                if(isRunning) {
-                  standUp += 1;
-                }
-              });
-            } else if (magnitude < 10 && _isStanding) {
-              setState(() {
-                _isStanding = false;
-              });
-
-
-            }
-          });
-        },
-      ),
-    );
-
-    _streamSubscriptions.add(
-      gyroscopeEvents.listen(
-        (GyroscopeEvent event) {
-          setState(() {
-            _gyroscopeValues = <double>[event.x, event.y, event.z];
-
-            double acceleration =
-                sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
-
-            if (acceleration > 9.8 && acceleration < 12) {
-              activity = "Walking";
-            } else if (acceleration >= 12 && acceleration < 20) {
-              activity = "Running";
-            } else {
-              activity = "Idle";
-            }
-          });
-        },
-      ),
-    );
-
-    FlutterBarometer.currentPressureEvent.listen((event) {
-      _currentPressure = event;
-    });
-  }
-
-  @override
   void dispose() {
     _streamSubscriptions.forEach((element) {
       element.cancel();
@@ -193,15 +193,14 @@ class _HomeViewState extends State<HomeView> {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
 
-      if (_currentPosition != null) {
+      if (_currentPosition != null && isRunning) {
         double distanceInMeters = await Geolocator.distanceBetween(
             _currentPosition!.latitude,
             _currentPosition!.longitude,
             position.latitude,
             position.longitude);
-        if(isRunning) {
-          _distanceTraveled += distanceInMeters;
-        }
+
+        _distanceTraveled += distanceInMeters;
       }
 
       setState(() {
@@ -507,88 +506,3 @@ class _HomeViewState extends State<HomeView> {
   }
 }
 
-class DataWorkouts extends StatelessWidget {
-  final String icon;
-  final String title;
-  final int count;
-  final String text;
-  Widget? btn;
-  DataWorkouts({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.count,
-    required this.text,
-    this.btn,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      height: 90,
-      width: screenWidth * 0.5,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: ColorsManager.secondaryBackground,
-        boxShadow: [
-          BoxShadow(
-            color: ColorsManager.secondaryBackground.withOpacity(0.12),
-            blurRadius: 5.0,
-            spreadRadius: 1.1,
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Row(
-            children: [
-              Image(image: AssetImage(icon),width: 25,height: 25,),
-              const SizedBox(width: 10),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w200,
-                  color: ColorsManager.primaryText,
-                ),
-                maxLines: 1,
-              ),
-              const Spacer(),
-              SizedBox(width: 4,),
-              if (btn != null) btn!,
-            ],
-          ),
-          Row(
-            children: [
-              if (count > -1)
-                Text(
-                  count.toString(),
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: ColorsManager.primaryText,
-                  ),
-                )
-              else
-                SizedBox(
-                  width: 35,
-                ),
-              const SizedBox(width: 10),
-              Text(
-                text,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: ColorsManager.secondaryText,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
