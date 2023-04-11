@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled5/Utils/routes_manager.dart';
 import 'package:untitled5/screens/app_pref.dart';
-
 import '../utils/colors_manager.dart';
 
 class SettingsView extends StatefulWidget {
@@ -28,13 +26,16 @@ class SettingsViewState extends State<SettingsView> {
 
   @override
   void initState() {
-    nameController.text = AppPreferences.getString("Name") ?? "";
-    heightController.text = AppPreferences.getInt("Height").toString() ?? "";
-    weightController.text = AppPreferences.getInt("Weight").toString() ?? "";
-    ageController.text = AppPreferences.getInt("Age").toString() ?? "";
-    _gender = AppPreferences.getString("Gender") == "Female" ? Gender.female : Gender.male;
+    nameController.text = AppPreferences.getString("Name");
+    heightController.text = AppPreferences.getInt("Height").toString();
+    weightController.text = AppPreferences.getInt("Weight").toString();
+    ageController.text = AppPreferences.getInt("Age").toString();
+    _gender = AppPreferences.getString("Gender") == "Female"
+        ? Gender.female
+        : Gender.male;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +49,7 @@ class SettingsViewState extends State<SettingsView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 Text(
                   'Name',
                   style: TextStyle(
@@ -66,7 +67,7 @@ class SettingsViewState extends State<SettingsView> {
                     _name = value;
                   },
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   'Height (in cm)',
                   style: TextStyle(
@@ -85,7 +86,7 @@ class SettingsViewState extends State<SettingsView> {
                     _height = int.tryParse(value!);
                   },
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   'Weight (in kg)',
                   style: TextStyle(
@@ -104,7 +105,7 @@ class SettingsViewState extends State<SettingsView> {
                     _weight = int.tryParse(value!);
                   },
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   'Gender',
                   style: TextStyle(
@@ -161,7 +162,8 @@ class SettingsViewState extends State<SettingsView> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorsManager.primaryColor,),
+                      backgroundColor: ColorsManager.primaryColor,
+                    ),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
@@ -169,10 +171,12 @@ class SettingsViewState extends State<SettingsView> {
                         AppPreferences.setString("Name", _name!);
                         AppPreferences.setInt("Height", _height!);
                         AppPreferences.setInt("Weight", _weight!);
-                        AppPreferences.setString("Gender", _gender == Gender.male ? "Male" : "Female");
+                        AppPreferences.setString("Gender",
+                            _gender == Gender.male ? "Male" : "Female");
                         AppPreferences.setInt("Age", _age!);
 
-                        Navigator.pushReplacementNamed(context, Routes.homeRoute);
+                        Navigator.pushReplacementNamed(
+                            context, Routes.homeRoute);
                       }
                     },
                     child: Text('Continue'),

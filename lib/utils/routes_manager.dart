@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled5/Utils/app_strings.dart';
 import 'package:untitled5/screens/home_view.dart';
-import 'package:untitled5/screens/main_view.dart';
 import 'package:untitled5/screens/sensor_view.dart';
-
 import '../screens/settings_view.dart';
 import '../screens/splash/splash_view.dart';
 
@@ -20,14 +18,12 @@ class RouteGenerator {
     switch (settings.name) {
       case Routes.splashRoute:
         return MaterialPageRoute(builder: (context) => const SplashView());
-      case Routes.mainRoute:
-        return MaterialPageRoute(builder: (context) => MainScreen());
       case Routes.sensorRoute:
-        return MaterialPageRoute(builder: (context) => SensorView());
+        return MaterialPageRoute(builder: (context) => const SensorView());
       case Routes.homeRoute:
-        return MaterialPageRoute(builder: (context) => HomeView());
+        return MaterialPageRoute(builder: (context) => const HomeView());
       case Routes.settingsRoute:
-        return MaterialPageRoute(builder: (context) => SettingsView());
+        return MaterialPageRoute(builder: (context) => const SettingsView());
       default:
         return unDefinedRoute();
     }

@@ -1,14 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_barometer_plugin/flutter_barometer.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:untitled5/screens/app_pref.dart';
 import 'package:untitled5/utils/colors_manager.dart';
 import 'dart:math'; // Import the math library
-
 import '../utils/assets_manager.dart';
 
 class HomeView extends StatefulWidget {
@@ -27,10 +24,6 @@ class _HomeViewState extends State<HomeView> {
   Position? _currentPosition;
   double _distanceTraveled = 0;
   double _caloriesBurned = 0;
-  int _weight = 70; // in kilograms
-  int _height = 170; // in centimeters
-  int _age = 30;
-  bool _isMale = true;
   StreamController<Position> locationStream = StreamController<Position>();
   StreamSubscription<Position>? locationSubscription;
   Timer? _timer;
@@ -44,18 +37,10 @@ class _HomeViewState extends State<HomeView> {
   bool _isStanding = false;
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   double altitude = 0.0;
-  BarometerValue _currentPressure = BarometerValue(0.0);
+  BarometerValue _currentPressure = const BarometerValue(0.0);
 
   @override
   Widget build(BuildContext context) {
-    final accelerometer =
-        _accelerometerValues?.map((double v) => v.toStringAsFixed(1)).toList();
-    final gyroscope =
-        _gyroscopeValues?.map((double v) => v.toStringAsFixed(1)).toList();
-    final userAccelerometer = _userAccelerometerValues
-        ?.map((double v) => v.toStringAsFixed(1))
-        .toList();
-
     return Scaffold(
       backgroundColor: ColorsManager.primaryBackground,
       body: SafeArea(
@@ -75,6 +60,8 @@ class _HomeViewState extends State<HomeView> {
                 ],
               ),
             ),
+            const SizedBox(height: 15),
+            _createRowStatistics(),
             const SizedBox(height: 15),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -114,9 +101,9 @@ class _HomeViewState extends State<HomeView> {
                 count: -1,
                 text: getRunningTime(),
                 btn: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorsManager.primaryColor,
-                  ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorsManager.primaryColor,
+                    ),
                     onPressed: () {
                       if (isRunning) {
                         stopTimer();
@@ -201,19 +188,21 @@ class _HomeViewState extends State<HomeView> {
       _currentPressure = event;
     });
   }
+
   @override
   void dispose() {
     _streamSubscriptions.forEach((element) {
       element.cancel();
     });
 
-    if(locationSubscription != null) {
+    if (locationSubscription != null) {
       locationSubscription!.cancel();
     }
 
     FlutterBarometer.currentPressureEvent.drain();
     super.dispose();
   }
+
   Future<void> _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -281,13 +270,13 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _calculateCaloriesBurned() {
-    double weightInKg = _weight.toDouble();
-    double heightInCm = _height.toDouble();
-    double ageInYears = _age.toDouble();
+    double weightInKg = AppPreferences.getInt("Weight").toDouble();
+    double heightInCm = AppPreferences.getInt("Height").toDouble();
+    double ageInYears = AppPreferences.getInt("Age").toDouble();
 
     // Calculate Basal Metabolic Rate (BMR) using the Mifflin-St Jeor equation
     double BMR = 10 * weightInKg + 6.25 * heightInCm - 5 * ageInYears;
-    if (_isMale) {
+    if (AppPreferences.getString("Gender") == "Male") {
       BMR += 5;
     } else {
       BMR -= 161;
@@ -295,7 +284,7 @@ class _HomeViewState extends State<HomeView> {
 
     // Calculate Total Daily Energy Expenditure (TDEE) using the Harris-Benedict equation
     double TDEE = 0;
-    if (_isMale) {
+    if (AppPreferences.getString("Gender") == "Male") {
       TDEE = 1.2 * BMR;
     } else {
       TDEE = 1.2 * BMR;
@@ -341,7 +330,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _createProfileData(BuildContext context) {
-    String displayName = AppPreferences.getString("Name") ?? "";
+    String displayName = AppPreferences.getString("Name");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -371,9 +360,10 @@ class _HomeViewState extends State<HomeView> {
           ),
           GestureDetector(
             child: CircleAvatar(
-              backgroundColor: ColorsManager.primaryColor,
-                backgroundImage: AssetImage(ImageAssets.lightModeSplashLogo), radius: 50),
-            onTap: () async {},
+                backgroundColor: ColorsManager.primaryColor,
+                backgroundImage:
+                    const AssetImage(ImageAssets.lightModeSplashLogo),
+                radius: 50),
           ),
         ],
       ),
@@ -464,6 +454,44 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  Widget _createRowStatistics() {
+    return Row(
+      children: [
+        Flexible(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            child: DataWorkouts(
+              icon: ImageAssets.inProgress,
+              title: "Stand Ups",
+              count: standUp,
+              text: "Times",
+            ),
+          ),
+        ),
+        Flexible(
+          child: DataWorkouts(
+            icon: ImageAssets.timeSent,
+            title: "Timer",
+            count: -1,
+            text: getRunningTime(),
+            btn: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorsManager.primaryColor,
+                ),
+                onPressed: () {
+                  if (isRunning) {
+                    stopTimer();
+                  } else {
+                    startTimer();
+                  }
+                },
+                child: Text(isRunning ? 'Stop' : 'Start')),
+          ),
+        ),
+      ],
+    );
+  }
+
   void startTimer() {
     _timer2 = Timer.periodic(Duration(milliseconds: 1000), (timer) {
       setState(() {
@@ -500,6 +528,7 @@ class DataWorkouts extends StatelessWidget {
   final String text;
   Widget? btn;
   DataWorkouts({
+    super.key,
     required this.icon,
     required this.title,
     required this.count,
