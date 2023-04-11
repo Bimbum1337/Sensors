@@ -51,7 +51,8 @@ class SettingsViewState extends State<SettingsView> {
                 SizedBox(height: 16.0),
                 Text(
                   'Height (in cm)',
-                  style: TextStyle(fontSize: 16.0,color: ColorsManager.primaryText),
+                  style: TextStyle(
+                      fontSize: 16.0, color: ColorsManager.primaryText),
                 ),
                 TextFormField(
                   keyboardType: TextInputType.number,
@@ -68,7 +69,8 @@ class SettingsViewState extends State<SettingsView> {
                 SizedBox(height: 16.0),
                 Text(
                   'Weight (in kg)',
-                  style: TextStyle(fontSize: 16.0),
+                  style: TextStyle(
+                      fontSize: 16.0, color: ColorsManager.primaryText),
                 ),
                 TextFormField(
                   keyboardType: TextInputType.number,
@@ -85,7 +87,8 @@ class SettingsViewState extends State<SettingsView> {
                 SizedBox(height: 16.0),
                 Text(
                   'Gender',
-                  style: TextStyle(fontSize: 16.0),
+                  style: TextStyle(
+                      fontSize: 16.0, color: ColorsManager.primaryText),
                 ),
                 DropdownButtonFormField<Gender>(
                   value: _gender,
@@ -117,7 +120,8 @@ class SettingsViewState extends State<SettingsView> {
                 SizedBox(height: 16.0),
                 Text(
                   'Age',
-                  style: TextStyle(fontSize: 16.0),
+                  style: TextStyle(
+                      fontSize: 16.0, color: ColorsManager.primaryText),
                 ),
                 TextFormField(
                   keyboardType: TextInputType.number,
@@ -132,19 +136,22 @@ class SettingsViewState extends State<SettingsView> {
                   },
                 ),
                 SizedBox(height: 32.0),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      // Do something with the user input data
-                      print('Name: $_name');
-                      print('Height: $_height');
-                      print('Weight: $_weight');
-                      print('Gender: $_gender');
-                      print('Age: $_age');
-                    }
-                  },
-                  child: Text('Save'),
+                Container(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        // Do something with the user input data
+                        print('Name: $_name');
+                        print('Height: $_height');
+                        print('Weight: $_weight');
+                        print('Gender: $_gender');
+                        print('Age: $_age');
+                      }
+                    },
+                    child: Text('Save'),
+                  ),
                 ),
               ],
             ),
