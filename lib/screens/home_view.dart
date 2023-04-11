@@ -33,6 +33,10 @@ class _HomeViewState extends State<HomeView> {
   StreamController<Position> locationStream = StreamController<Position>();
   StreamSubscription<Position>? locationSubscription;
   Timer? _timer;
+  Timer? _timer2;
+
+  int counter = 0;
+  bool isRunning = false;
   String activity = 'Idle';
   int lastShown = 1;
   int standUp = 0;
@@ -99,6 +103,35 @@ class _HomeViewState extends State<HomeView> {
                 count: -1,
                 text: _trainingRecommendation(),
               ),
+            ),
+            const SizedBox(height: 15),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: DataWorkouts(
+                icon: ImageAssets.inProgress,
+                title: "Timer",
+                count: -1,
+                text: getRunningTime(),
+                btn: ElevatedButton(
+                    onPressed: () {
+                      if (isRunning) {
+                        stopTimer();
+                      } else {
+                        startTimer();
+                      }
+                    },
+                    child: Text(isRunning ? 'Stop' : 'Start')),
+              ),
+            ),
+            const SizedBox(height: 15),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [],
+                ),
+              ],
             ),
           ],
         ),
@@ -302,12 +335,13 @@ class _HomeViewState extends State<HomeView> {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
                 'Hi, $displayName',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: ColorsManager.primaryText,
                 ),
               ),
               SizedBox(height: 2),
@@ -316,6 +350,7 @@ class _HomeViewState extends State<HomeView> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
+                  color: ColorsManager.primaryText,
                 ),
               ),
             ],
@@ -338,10 +373,10 @@ class _HomeViewState extends State<HomeView> {
       width: screenWidth * 0.35,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: ColorsManager.white,
+        color: ColorsManager.secondaryBackground,
         boxShadow: [
           BoxShadow(
-            color: ColorsManager.black.withOpacity(0.12),
+            color: ColorsManager.secondaryBackground.withOpacity(0.12),
             blurRadius: 5.0,
             spreadRadius: 1.1,
           ),
@@ -362,7 +397,7 @@ class _HomeViewState extends State<HomeView> {
                 child: Text(
                   "Walked",
                   style: TextStyle(
-                    color: ColorsManager.black,
+                    color: ColorsManager.primaryText,
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
@@ -377,7 +412,7 @@ class _HomeViewState extends State<HomeView> {
             style: TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.w700,
-              color: ColorsManager.black,
+              color: ColorsManager.primaryText,
             ),
           ),
           Text(
@@ -386,7 +421,7 @@ class _HomeViewState extends State<HomeView> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: ColorsManager.grey,
+              color: ColorsManager.secondaryText,
             ),
           ),
         ],
@@ -413,6 +448,34 @@ class _HomeViewState extends State<HomeView> {
       ],
     );
   }
+
+  void startTimer() {
+    _timer2 = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      setState(() {
+        counter++;
+      });
+    });
+    setState(() {
+      isRunning = true;
+    });
+  }
+
+  void stopTimer() {
+    _timer2!.cancel();
+    setState(() {
+      isRunning = false;
+    });
+  }
+
+  String getRunningTime() {
+    if (counter < 60) {
+      return '$counter Seconds';
+    } else if (counter < 3600) {
+      return '${counter ~/ 60} Minutes ${counter % 60} Seconds';
+    } else {
+      return '${counter ~/ 3600} Hours ${(counter % 3600) ~/ 60} Minutes ${(counter % 3600) % 60} Seconds';
+    }
+  }
 }
 
 class DataWorkouts extends StatelessWidget {
@@ -420,12 +483,13 @@ class DataWorkouts extends StatelessWidget {
   final String title;
   final int count;
   final String text;
-
+  Widget? btn;
   DataWorkouts({
     required this.icon,
     required this.title,
     required this.count,
     required this.text,
+    this.btn,
   });
 
   @override
@@ -437,10 +501,10 @@ class DataWorkouts extends StatelessWidget {
       width: screenWidth * 0.5,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: ColorsManager.white,
+        color: ColorsManager.secondaryBackground,
         boxShadow: [
           BoxShadow(
-            color: ColorsManager.black.withOpacity(0.12),
+            color: ColorsManager.secondaryBackground.withOpacity(0.12),
             blurRadius: 5.0,
             spreadRadius: 1.1,
           ),
@@ -458,9 +522,11 @@ class DataWorkouts extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: ColorsManager.black,
+                  color: ColorsManager.primaryText,
                 ),
               ),
+              Spacer(),
+              if (btn != null) btn!,
             ],
           ),
           Row(
@@ -471,7 +537,7 @@ class DataWorkouts extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
-                    color: ColorsManager.black,
+                    color: ColorsManager.primaryText,
                   ),
                 )
               else
@@ -484,7 +550,7 @@ class DataWorkouts extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: ColorsManager.grey,
+                  color: ColorsManager.secondaryText,
                 ),
               ),
             ],

@@ -15,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> mainScreenWidgets = [
     const HomeView(),
-    const SettingsView(),
+    SettingsView(),
   ];
 
   @override
