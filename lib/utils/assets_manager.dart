@@ -17,4 +17,12 @@ class ImageAssets {
   static const String pilates = 'assets/icons/workouts/pilates.png';
   static const String fullBody = 'assets/icons/workouts/full_body.png';
   static const String stretching = 'assets/icons/workouts/stretching.png';
+
+  static const String activity = '$imagePath/home/activity.png';
+  static const String distance = '$imagePath/home/distance.png';
+  static const String footstep = '$imagePath/home/footstep.png';
+  static const String heart = '$imagePath/home/heart.png';
+  static const String standUp = '$imagePath/home/standup.png';
+  static const String train = '$imagePath/home/train.png';
+
 }

@@ -6,7 +6,9 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'package:untitled5/screens/app_pref.dart';
 import 'package:untitled5/utils/colors_manager.dart';
 import 'dart:math'; // Import the math library
+import '../Utils/routes_manager.dart';
 import '../utils/assets_manager.dart';
+import '../utils/constants_manager.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -61,22 +63,10 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             const SizedBox(height: 15),
-            _createRowStatistics(),
-            const SizedBox(height: 15),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: DataWorkouts(
-                icon: ImageAssets.inProgress,
-                title: "Stand Ups",
-                count: standUp,
-                text: "Times",
-              ),
-            ),
-            const SizedBox(height: 15),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: DataWorkouts(
-                icon: ImageAssets.inProgress,
+                icon: ImageAssets.activity,
                 title: "Realtime Activity Detection",
                 count: -1,
                 text: activity,
@@ -86,7 +76,7 @@ class _HomeViewState extends State<HomeView> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: DataWorkouts(
-                icon: ImageAssets.inProgress,
+                icon: ImageAssets.train,
                 title: "Training Recommend",
                 count: -1,
                 text: _trainingRecommendation(),
@@ -96,7 +86,7 @@ class _HomeViewState extends State<HomeView> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: DataWorkouts(
-                icon: ImageAssets.inProgress,
+                icon: ImageAssets.timeSent,
                 title: "Timer",
                 count: -1,
                 text: getRunningTime(),
@@ -115,15 +105,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             const SizedBox(height: 15),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [],
-                ),
-              ],
-            ),
+            _createRowStatistics(),
           ],
         ),
       ),
@@ -394,8 +376,10 @@ class _HomeViewState extends State<HomeView> {
             children: [
               const Image(
                 image: AssetImage(
-                  ImageAssets.finished,
+                  ImageAssets.footstep,
                 ),
+                width: 25,
+                height: 25,
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -404,7 +388,7 @@ class _HomeViewState extends State<HomeView> {
                   style: TextStyle(
                     color: ColorsManager.primaryText,
                     fontSize: 18,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w200,
                   ),
                   overflow: TextOverflow.fade,
                   softWrap: false,
@@ -438,14 +422,14 @@ class _HomeViewState extends State<HomeView> {
     return Column(
       children: [
         DataWorkouts(
-          icon: ImageAssets.inProgress,
+          icon: ImageAssets.finished,
           title: "Calories",
           count: _caloriesBurned.toInt(),
           text: 'KCal',
         ),
         const SizedBox(height: 20),
         DataWorkouts(
-          icon: ImageAssets.timeSent,
+          icon: ImageAssets.distance,
           title: "Distance",
           count: _distanceTraveled.toInt(),
           text: "Meters",
@@ -461,7 +445,7 @@ class _HomeViewState extends State<HomeView> {
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             child: DataWorkouts(
-              icon: ImageAssets.inProgress,
+              icon: ImageAssets.standUp,
               title: "Stand Ups",
               count: standUp,
               text: "Times",
@@ -469,23 +453,17 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         Flexible(
-          child: DataWorkouts(
-            icon: ImageAssets.timeSent,
-            title: "Timer",
-            count: -1,
-            text: getRunningTime(),
-            btn: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ColorsManager.primaryColor,
-                ),
-                onPressed: () {
-                  if (isRunning) {
-                    stopTimer();
-                  } else {
-                    startTimer();
-                  }
-                },
-                child: Text(isRunning ? 'Stop' : 'Start')),
+          child: InkWell(
+            child: Container(
+              margin: const EdgeInsets.only(right: 20),
+              child: DataWorkouts(
+                icon: ImageAssets.heart,
+                title: "Heart Rate",
+                count: -1,
+                text: AppConstants.HeartBeats,
+              ),
+            ),
+            onTap: ()=> Navigator.pushNamed(context, Routes.heartRoute),
           ),
         ),
       ],
@@ -559,17 +537,19 @@ class DataWorkouts extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image(image: AssetImage(icon)),
+              Image(image: AssetImage(icon),width: 25,height: 25,),
               const SizedBox(width: 10),
               Text(
                 title,
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w200,
                   color: ColorsManager.primaryText,
                 ),
+                maxLines: 1,
               ),
-              Spacer(),
+              const Spacer(),
+              SizedBox(width: 4,),
               if (btn != null) btn!,
             ],
           ),
