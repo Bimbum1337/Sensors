@@ -129,16 +129,19 @@ class _HomeViewState extends State<HomeView> {
             double magnitude =
                 sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
             if (magnitude > 30 && !_isStanding) {
-              print(magnitude);
 
               setState(() {
                 _isStanding = true;
-                standUp += 1;
+                if(isRunning) {
+                  standUp += 1;
+                }
               });
             } else if (magnitude < 10 && _isStanding) {
               setState(() {
                 _isStanding = false;
               });
+
+
             }
           });
         },
@@ -196,8 +199,9 @@ class _HomeViewState extends State<HomeView> {
             _currentPosition!.longitude,
             position.latitude,
             position.longitude);
-
-        _distanceTraveled += distanceInMeters;
+        if(isRunning) {
+          _distanceTraveled += distanceInMeters;
+        }
       }
 
       setState(() {
@@ -428,12 +432,16 @@ class _HomeViewState extends State<HomeView> {
           text: 'KCal',
         ),
         const SizedBox(height: 20),
-        DataWorkouts(
-          icon: ImageAssets.distance,
-          title: "Distance",
-          count: _distanceTraveled.toInt(),
-          text: "Meters",
+        InkWell(
+          child: DataWorkouts(
+            icon: ImageAssets.heart,
+            title: "Heart Rate",
+            count: -1,
+            text: AppConstants.HeartBeats,
+          ),
+          onTap: ()=> Navigator.pushNamed(context, Routes.heartRoute),
         ),
+
       ],
     );
   }
@@ -457,10 +465,10 @@ class _HomeViewState extends State<HomeView> {
             child: Container(
               margin: const EdgeInsets.only(right: 20),
               child: DataWorkouts(
-                icon: ImageAssets.heart,
-                title: "Heart Rate",
-                count: -1,
-                text: AppConstants.HeartBeats,
+                icon: ImageAssets.distance,
+                title: "Distance",
+                count: _distanceTraveled.toInt(),
+                text: "Meters",
               ),
             ),
             onTap: ()=> Navigator.pushNamed(context, Routes.heartRoute),
