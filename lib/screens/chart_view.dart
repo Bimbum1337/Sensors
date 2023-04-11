@@ -18,7 +18,7 @@ class Chart extends StatelessWidget {
 
     for (var element in _data) {
       if (element.value > 0) {
-        values?.add(element.value);
+        values.add(element.value);
       }
     }
 
@@ -40,7 +40,7 @@ class Chart extends StatelessWidget {
       xContainerLabelLayoutStrategy: xContainerLabelLayoutStrategy,
     );
 
-    var lineChart = Container(
+    var lineChart = SizedBox(
       width: double.infinity,
       child: LineChart(
         painter: LineChartPainter(

@@ -45,7 +45,7 @@ class _SensorViewState extends State<SensorView> {
                 decoration: BoxDecoration(
                   border: Border.all(width: 1.0, color: Colors.black38),
                 ),
-                child: Text(""),
+                child: const Text(""),
               ),
             ),
             Padding(

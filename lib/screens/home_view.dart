@@ -20,7 +20,6 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   List<double>? _accelerometerValues;
-  List<double>? _gyroscopeValues;
   List<double>? _previousAccelerometerValues;
   int _stepCount = 0;
   Position? _currentPosition;
@@ -49,19 +48,18 @@ class _HomeViewState extends State<HomeView> {
 
     _streamSubscriptions.add(
       accelerometerEvents.listen(
-            (AccelerometerEvent event) {
+        (AccelerometerEvent event) {
           setState(() {
             _accelerometerValues = <double>[event.x, event.y, event.z];
             _calculateSteps();
             _calculateCaloriesBurned();
 
             double magnitude =
-            sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
+                sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
             if (magnitude > 30 && !_isStanding) {
-
               setState(() {
                 _isStanding = true;
-                if(isRunning) {
+                if (isRunning) {
                   standUp += 1;
                 }
               });
@@ -69,8 +67,6 @@ class _HomeViewState extends State<HomeView> {
               setState(() {
                 _isStanding = false;
               });
-
-
             }
           });
         },
@@ -79,12 +75,11 @@ class _HomeViewState extends State<HomeView> {
 
     _streamSubscriptions.add(
       gyroscopeEvents.listen(
-            (GyroscopeEvent event) {
+        (GyroscopeEvent event) {
           setState(() {
-            _gyroscopeValues = <double>[event.x, event.y, event.z];
 
             double acceleration =
-            sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
+                sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
 
             if (acceleration > 9.8 && acceleration < 12) {
               activity = "Walking";
@@ -176,9 +171,9 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void dispose() {
-    _streamSubscriptions.forEach((element) {
+    for (var element in _streamSubscriptions) {
       element.cancel();
-    });
+    }
 
     if (locationSubscription != null) {
       locationSubscription!.cancel();
@@ -194,7 +189,7 @@ class _HomeViewState extends State<HomeView> {
           desiredAccuracy: LocationAccuracy.high);
 
       if (_currentPosition != null && isRunning) {
-        double distanceInMeters = await Geolocator.distanceBetween(
+        double distanceInMeters = Geolocator.distanceBetween(
             _currentPosition!.latitude,
             _currentPosition!.longitude,
             position.latitude,
@@ -207,11 +202,13 @@ class _HomeViewState extends State<HomeView> {
         _currentPosition = position;
       });
     } catch (e) {
+      // ignore: avoid_print
       print('Error getting location: $e');
     }
   }
 
   double _altitudeInMeters() {
+    // ignore: unnecessary_null_comparison
     if (_currentPressure != null) {
       double pressure = (_currentPressure.hectpascal * 1000).round() / 1000;
       double altitudeInMeters = (1 - pow(pressure / 1013.25, 0.190284)) * 44330;
@@ -260,6 +257,7 @@ class _HomeViewState extends State<HomeView> {
     double ageInYears = AppPreferences.getInt("Age").toDouble();
 
     // Calculate Basal Metabolic Rate (BMR) using the Mifflin-St Jeor equation
+    // ignore: non_constant_identifier_names
     double BMR = 10 * weightInKg + 6.25 * heightInCm - 5 * ageInYears;
     if (AppPreferences.getString("Gender") == "Male") {
       BMR += 5;
@@ -268,6 +266,7 @@ class _HomeViewState extends State<HomeView> {
     }
 
     // Calculate Total Daily Energy Expenditure (TDEE) using the Harris-Benedict equation
+    // ignore: non_constant_identifier_names, unused_local_variable
     double TDEE = 0;
     if (AppPreferences.getString("Gender") == "Male") {
       TDEE = 1.2 * BMR;
@@ -332,7 +331,7 @@ class _HomeViewState extends State<HomeView> {
                   color: ColorsManager.primaryText,
                 ),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               Text(
                 "Check Activity",
                 style: TextStyle(
@@ -438,9 +437,8 @@ class _HomeViewState extends State<HomeView> {
             count: -1,
             text: AppConstants.HeartBeats,
           ),
-          onTap: ()=> Navigator.pushNamed(context, Routes.heartRoute),
+          onTap: () => Navigator.pushNamed(context, Routes.heartRoute),
         ),
-
       ],
     );
   }
@@ -450,7 +448,7 @@ class _HomeViewState extends State<HomeView> {
       children: [
         Flexible(
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
+            margin: const EdgeInsets.symmetric(horizontal: 15),
             child: DataWorkouts(
               icon: ImageAssets.standUp,
               title: "Stand Ups",
@@ -462,7 +460,7 @@ class _HomeViewState extends State<HomeView> {
         Flexible(
           child: InkWell(
             child: Container(
-              margin: const EdgeInsets.only(right: 20),
+              margin: const EdgeInsets.only(right: 15),
               child: DataWorkouts(
                 icon: ImageAssets.distance,
                 title: "Distance",
@@ -470,7 +468,7 @@ class _HomeViewState extends State<HomeView> {
                 text: "Meters",
               ),
             ),
-            onTap: ()=> Navigator.pushNamed(context, Routes.heartRoute),
+            onTap: () => Navigator.pushNamed(context, Routes.heartRoute),
           ),
         ),
       ],
@@ -478,7 +476,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void startTimer() {
-    _timer2 = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    _timer2 = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
       setState(() {
         counter++;
       });
@@ -505,4 +503,3 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 }
-

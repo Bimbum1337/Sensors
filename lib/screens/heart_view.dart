@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled5/utils/colors_manager.dart';
@@ -61,6 +63,7 @@ class HeartViewView extends State<HeartView> {
         }
       });
     } on Exception {
+      // ignore: avoid_print
       print(Exception);
     }
   }
@@ -79,10 +82,10 @@ class HeartViewView extends State<HeartView> {
       _avg = 0;
       _n = _values.length;
       _m = 0;
-      _values.forEach((SensorValue value) {
+      for (var value in _values) {
         _avg += value.value / _n;
         if (value.value > _m) _m = value.value;
-      });
+      }
       _threshold = (_m + _avg) / 2;
       bpm = 0;
       _counter = 0;

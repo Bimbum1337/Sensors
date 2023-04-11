@@ -113,14 +113,14 @@ class SettingsViewState extends State<SettingsView> {
                 ),
                 DropdownButtonFormField<Gender>(
                   value: _gender,
-                  items: [
+                  items: const [
                     DropdownMenuItem(
-                      child: Text('Male'),
                       value: Gender.male,
+                      child: Text('Male'),
                     ),
                     DropdownMenuItem(
-                      child: Text('Female'),
                       value: Gender.female,
+                      child: Text('Female'),
                     ),
                   ],
                   validator: (value) {
@@ -138,7 +138,7 @@ class SettingsViewState extends State<SettingsView> {
                     _gender = value!;
                   },
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   'Age',
                   style: TextStyle(
@@ -157,8 +157,8 @@ class SettingsViewState extends State<SettingsView> {
                     _age = int.tryParse(value!);
                   },
                 ),
-                SizedBox(height: 32.0),
-                Container(
+                const SizedBox(height: 32.0),
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -179,7 +179,7 @@ class SettingsViewState extends State<SettingsView> {
                             context, Routes.homeRoute);
                       }
                     },
-                    child: Text('Continue'),
+                    child: const Text('Continue'),
                   ),
                 ),
               ],

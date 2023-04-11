@@ -52,7 +52,7 @@ class DataWorkouts extends StatelessWidget {
                 maxLines: 1,
               ),
               const Spacer(),
-              SizedBox(width: 4,),
+              const SizedBox(width: 4,),
               if (btn != null) btn!,
             ],
           ),
@@ -68,7 +68,7 @@ class DataWorkouts extends StatelessWidget {
                   ),
                 )
               else
-                SizedBox(
+                const SizedBox(
                   width: 35,
                 ),
               const SizedBox(width: 10),
