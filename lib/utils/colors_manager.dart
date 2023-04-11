@@ -7,7 +7,7 @@ class ColorsManager {
   static Color dark900 = const Color(0xFF1A1F24);
   static Color grayDark = const Color(0xFF95A1AC);
 
-  static Color get primaryColor => const Color(0xFF96C3E2);
+  static Color get primaryColor => const Color(0xFF25544f);
   static Color get secondaryColor => const Color(0xFFEE8B60);
   static Color get tertiaryColor => const Color(0xFFFFFFFF);
   static Color get alternate => const Color(0xFF39D2C0);

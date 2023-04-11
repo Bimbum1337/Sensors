@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       //starting the flow of the application by defining the onGenerateRoute function and initialize it with the first route the application would start with.
       onGenerateRoute: RouteGenerator.getRoute,
-      initialRoute: Routes.homeRoute,
+      initialRoute: Routes.splashRoute,
       theme: ThemeData(
         textTheme: TextTheme(
             displayLarge:

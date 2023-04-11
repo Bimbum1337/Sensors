@@ -83,6 +83,6 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void _onFinishLoading() async {
-    Navigator.pushReplacementNamed(context, Routes.mainRoute);
+    Navigator.pushReplacementNamed(context, Routes.settingsRoute);
   }
 }

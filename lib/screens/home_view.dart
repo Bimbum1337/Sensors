@@ -5,6 +5,7 @@ import 'package:flutter_barometer_plugin/flutter_barometer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:untitled5/screens/app_pref.dart';
 import 'package:untitled5/utils/colors_manager.dart';
 import 'dart:math'; // Import the math library
 
@@ -113,6 +114,9 @@ class _HomeViewState extends State<HomeView> {
                 count: -1,
                 text: getRunningTime(),
                 btn: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorsManager.primaryColor,
+                  ),
                     onPressed: () {
                       if (isRunning) {
                         stopTimer();
@@ -337,7 +341,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _createProfileData(BuildContext context) {
-    const displayName = "No Username";
+    String displayName = AppPreferences.getString("Name") ?? "";
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -366,8 +370,9 @@ class _HomeViewState extends State<HomeView> {
             ],
           ),
           GestureDetector(
-            child: const CircleAvatar(
-                backgroundImage: AssetImage(ImageAssets.profile), radius: 60),
+            child: CircleAvatar(
+              backgroundColor: ColorsManager.primaryColor,
+                backgroundImage: AssetImage(ImageAssets.lightModeSplashLogo), radius: 50),
             onTap: () async {},
           ),
         ],

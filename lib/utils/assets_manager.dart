@@ -4,8 +4,8 @@ const String jsonPath = 'assets/json';
 
 class ImageAssets {
   //splash screen
-  static const String lightModeSplashLogo = '$imagePath/light_mode_logo.png';
-  static const String darkModeSplashLogo = '$imagePath/dark_mode_logo.png';
+  static const String lightModeSplashLogo = '$imagePath/logo.png';
+  static const String darkModeSplashLogo = '$imagePath/logo.png';
   static const String onBoardingLogo = '$imagePath/onboarding_logo.png';
   static const String loginDarkModeLoginLogo =
       '$imagePath/login_dark_mode_logo.png';

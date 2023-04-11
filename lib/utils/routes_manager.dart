@@ -4,6 +4,7 @@ import 'package:untitled5/screens/home_view.dart';
 import 'package:untitled5/screens/main_view.dart';
 import 'package:untitled5/screens/sensor_view.dart';
 
+import '../screens/settings_view.dart';
 import '../screens/splash/splash_view.dart';
 
 class Routes {
@@ -11,6 +12,7 @@ class Routes {
   static const String mainRoute = "/main";
   static const String sensorRoute = "/sensor";
   static const String homeRoute = "/home";
+  static const String settingsRoute = "/settings";
 }
 
 class RouteGenerator {
@@ -24,6 +26,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => SensorView());
       case Routes.homeRoute:
         return MaterialPageRoute(builder: (context) => HomeView());
+      case Routes.settingsRoute:
+        return MaterialPageRoute(builder: (context) => SettingsView());
       default:
         return unDefinedRoute();
     }

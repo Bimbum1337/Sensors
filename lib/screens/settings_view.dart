@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled5/Utils/routes_manager.dart';
+import 'package:untitled5/screens/app_pref.dart';
 
 import '../utils/colors_manager.dart';
 
@@ -12,12 +15,26 @@ class SettingsView extends StatefulWidget {
 class SettingsViewState extends State<SettingsView> {
   final _formKey = GlobalKey<FormState>();
 
+  TextEditingController nameController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
+
   String? _name;
   int? _height;
   int? _weight;
   Gender? _gender;
   int? _age;
 
+  @override
+  void initState() {
+    nameController.text = AppPreferences.getString("Name") ?? "";
+    heightController.text = AppPreferences.getInt("Height").toString() ?? "";
+    weightController.text = AppPreferences.getInt("Weight").toString() ?? "";
+    ageController.text = AppPreferences.getInt("Age").toString() ?? "";
+    _gender = AppPreferences.getString("Gender") == "Female" ? Gender.female : Gender.male;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +55,7 @@ class SettingsViewState extends State<SettingsView> {
                       fontSize: 16.0, color: ColorsManager.primaryText),
                 ),
                 TextFormField(
+                  controller: nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name';
@@ -55,6 +73,7 @@ class SettingsViewState extends State<SettingsView> {
                       fontSize: 16.0, color: ColorsManager.primaryText),
                 ),
                 TextFormField(
+                  controller: heightController,
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -73,6 +92,7 @@ class SettingsViewState extends State<SettingsView> {
                       fontSize: 16.0, color: ColorsManager.primaryText),
                 ),
                 TextFormField(
+                  controller: weightController,
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -124,6 +144,7 @@ class SettingsViewState extends State<SettingsView> {
                       fontSize: 16.0, color: ColorsManager.primaryText),
                 ),
                 TextFormField(
+                  controller: ageController,
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -139,18 +160,22 @@ class SettingsViewState extends State<SettingsView> {
                 Container(
                   width: double.infinity,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorsManager.primaryColor,),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        // Do something with the user input data
-                        print('Name: $_name');
-                        print('Height: $_height');
-                        print('Weight: $_weight');
-                        print('Gender: $_gender');
-                        print('Age: $_age');
+
+                        AppPreferences.setString("Name", _name!);
+                        AppPreferences.setInt("Height", _height!);
+                        AppPreferences.setInt("Weight", _weight!);
+                        AppPreferences.setString("Gender", _gender == Gender.male ? "Male" : "Female");
+                        AppPreferences.setInt("Age", _age!);
+
+                        Navigator.pushReplacementNamed(context, Routes.homeRoute);
                       }
                     },
-                    child: Text('Save'),
+                    child: Text('Continue'),
                   ),
                 ),
               ],

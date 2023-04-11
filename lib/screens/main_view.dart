@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled5/screens/settings.dart';
+import 'package:untitled5/screens/settings_view.dart';
 import 'package:untitled5/utils/colors_manager.dart';
 
 import 'home_view.dart';
