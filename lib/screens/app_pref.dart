@@ -41,7 +41,8 @@ class AppPreferences {
     return _preferences.setBool(key, value);
   }
 
-  static Set<String> getStringList(String key, [Set<String> defaultValues = const {}]) {
+  static Set<String> getStringList(String key,
+      [Set<String> defaultValues = const {}]) {
     return _preferences.getStringList(key)?.toSet() ?? defaultValues;
   }
 

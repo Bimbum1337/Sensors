@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:untitled5/utils/colors_manager.dart';
 
@@ -7,8 +6,8 @@ class DataWorkouts extends StatelessWidget {
   final String title;
   final int count;
   final String text;
-  Widget? btn;
-  DataWorkouts({
+  final Widget? btn;
+  const DataWorkouts({
     super.key,
     required this.icon,
     required this.title,
@@ -40,7 +39,11 @@ class DataWorkouts extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image(image: AssetImage(icon),width: 25,height: 25,),
+              Image(
+                image: AssetImage(icon),
+                width: 25,
+                height: 25,
+              ),
               const SizedBox(width: 10),
               Text(
                 title,
@@ -52,7 +55,9 @@ class DataWorkouts extends StatelessWidget {
                 maxLines: 1,
               ),
               const Spacer(),
-              const SizedBox(width: 4,),
+              const SizedBox(
+                width: 4,
+              ),
               if (btn != null) btn!,
             ],
           ),

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_barometer_plugin/flutter_barometer.dart';
@@ -77,13 +79,12 @@ class _HomeViewState extends State<HomeView> {
       gyroscopeEvents.listen(
         (GyroscopeEvent event) {
           setState(() {
-
             double acceleration =
                 sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
 
-            if (acceleration > 9.8 && acceleration < 12) {
+            if (acceleration > 0.5 && acceleration < 3) {
               activity = "Walking";
-            } else if (acceleration >= 12 && acceleration < 20) {
+            } else if (acceleration >= 4) {
               activity = "Running";
             } else {
               activity = "Idle";
@@ -190,10 +191,10 @@ class _HomeViewState extends State<HomeView> {
 
       if (_currentPosition != null && isRunning) {
         double distanceInMeters = Geolocator.distanceBetween(
-            _currentPosition!.latitude,
-            _currentPosition!.longitude,
-            position.latitude,
-            position.longitude);
+            _currentPosition!.latitude.abs(),
+            _currentPosition!.longitude.abs(),
+            position.latitude.abs(),
+            position.longitude.abs());
 
         _distanceTraveled += distanceInMeters;
       }
@@ -202,7 +203,6 @@ class _HomeViewState extends State<HomeView> {
         _currentPosition = position;
       });
     } catch (e) {
-      // ignore: avoid_print
       print('Error getting location: $e');
     }
   }
@@ -225,7 +225,7 @@ class _HomeViewState extends State<HomeView> {
     } else if (altitude < 2000) {
       return "Adjust intensity, moderate altitude.";
     } else {
-      return "Decrease intensity, high altitude.";
+      return "Decrease intensity, high altitude .";
     }
   }
 
@@ -233,11 +233,13 @@ class _HomeViewState extends State<HomeView> {
     double oldValueSum = 0;
     double newValueSum = 0;
     double threshold = 10.0;
-
+    //x , y  , z
     if (_previousAccelerometerValues != null) {
       oldValueSum = _previousAccelerometerValues!
           .map((value) => value.abs())
-          .reduce((a, b) => a + b);
+          .reduce((a, b) {
+        return a + b;
+      });
 
       newValueSum = _accelerometerValues!
           .map((value) => value.abs())
@@ -259,17 +261,16 @@ class _HomeViewState extends State<HomeView> {
     // Calculate Basal Metabolic Rate (BMR) using the Mifflin-St Jeor equation
     // ignore: non_constant_identifier_names
     double BMR = 10 * weightInKg + 6.25 * heightInCm - 5 * ageInYears;
+
     if (AppPreferences.getString("Gender") == "Male") {
       BMR += 5;
-    } else {
-      BMR -= 161;
     }
 
     // Calculate Total Daily Energy Expenditure (TDEE) using the Harris-Benedict equation
     // ignore: non_constant_identifier_names, unused_local_variable
     double TDEE = 0;
     if (AppPreferences.getString("Gender") == "Male") {
-      TDEE = 1.2 * BMR;
+      TDEE = 1.3 * BMR;
     } else {
       TDEE = 1.2 * BMR;
     }

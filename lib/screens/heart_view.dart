@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled5/utils/colors_manager.dart';
 import 'package:wakelock/wakelock.dart';
-
 import '../utils/constants_manager.dart';
 import '../utils/models.dart';
 import 'chart_view.dart';
@@ -104,7 +103,7 @@ class HeartViewView extends State<HeartView> {
         bpm = bpm / _counter;
         setState(() {
           _bpm = ((1 - _alpha) * bpm + _alpha * bpm).toInt();
-          if(_bpm > 30 && _bpm < 150) {
+          if (_bpm > 30 && _bpm < 150) {
             AppConstants.HeartBeats = _bpm.round().toString();
           }
         });
@@ -169,7 +168,8 @@ class HeartViewView extends State<HeartView> {
                             : "--"),
                         style: TextStyle(
                             color: ColorsManager.secondaryBackground,
-                            fontSize: 32, fontWeight: FontWeight.bold),
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
